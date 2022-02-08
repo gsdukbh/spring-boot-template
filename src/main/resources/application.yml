@@ -21,4 +21,4 @@ env:
     tokenHeader: Authorization
     tokenPrefix: 'Bearer'
     privateKey: classpath:private.pem
-    publicKey: classpath:public.pub
+    publicKey: classpath:public.pem
