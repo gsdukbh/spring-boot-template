@@ -1,6 +1,7 @@
 package top.werls.springboottemplate.common.utils.cache.file;
 
-import top.werls.core.common.utils.cache.Cache;
+
+import top.werls.springboottemplate.common.utils.cache.Cache;
 
 import java.io.Serial;
 

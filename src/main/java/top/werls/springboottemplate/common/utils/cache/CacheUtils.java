@@ -1,7 +1,8 @@
 package top.werls.springboottemplate.common.utils.cache;
 
 
-import top.werls.core.common.utils.cache.impl.SimpleCache;
+
+import top.werls.springboottemplate.common.utils.cache.impl.SimpleCache;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
