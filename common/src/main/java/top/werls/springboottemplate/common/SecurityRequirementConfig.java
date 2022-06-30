@@ -1,8 +1,10 @@
-package top.werls.springboottemplate.common;/**
- *
- * 
+package top.werls.springboottemplate.common;
+
+/**
  * @author Jiawei Lee
- * @since on  2022/6/30
  * @version TODO
- */public class SecurityRequirementConfig {
+ * @since on  2022/6/30
+ */
+public class SecurityRequirementConfig {
+    public static final String TOKEN_HEADER = "Authorization";
 }

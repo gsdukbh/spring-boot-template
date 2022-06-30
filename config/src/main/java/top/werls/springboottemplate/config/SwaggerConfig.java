@@ -21,7 +21,7 @@ public class SwaggerConfig {
     public static final String TOKEN_HEADER = "Authorization";
 
     @Bean
-    public OpenAPI springShopOpenAPI() {
+    public OpenAPI springOpenApi() {
         return new OpenAPI()
                 .components(components())
                 .info(new Info()

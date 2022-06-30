@@ -1,4 +1,4 @@
-package top.werls.springboottemplate.system.Security;
+package top.werls.springboottemplate.Security;
 
 
 import lombok.extern.slf4j.Slf4j;

@@ -1,9 +1,14 @@
 
 dependencies {
     implementation project(':common')
-    implementation project(':config')
 }
 
 test {
     useJUnitPlatform()
+}
+bootJar{
+    enabled = false
+}
+jar {
+    enabled=true
 }

@@ -1,59 +1,73 @@
-plugins {
-    id 'org.springframework.boot' version '2.7.0'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'java'
-}
 
-group = 'top.werls'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+buildscript {
+    ext{
+        springBootVersion='2.7.0'
+        springBootManagementVersion='1.0.11.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:${springBootManagementVersion}")
     }
 }
 
-repositories {
-    mavenCentral()
-}
+subprojects {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
 
-ext{
-    // version 配置
-    gsonVersion= '2.8.9'
-    lang3Version = '3.12.0'
-    springdocVersion = '1.6.5'
-    jwtVersion = '0.11.2'
-    bouncycastleVersion = '1.69'
-}
+    group = 'top.werls.springboottemplate'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '17'
+    repositories {
+        mavenCentral()
+    }
+    ext{
+        // version 配置
+        gsonVersion= '2.9.0'
+        lang3Version = '3.12.0'
+        springdocVersion = '1.6.5'
+        jwtVersion = '0.11.2'
+        bouncycastleVersion = '1.69'
+        springBootVersion='2.7.0'
+        springBootManagementVersion='1.0.11.RELEASE'
+    }
 
-dependencies {
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+            mavenBom("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        }
+    }
+    dependencies {
 
-    implementation 'com.google.code.gson:gson:2.9.0'
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
+        implementation "com.google.code.gson:gson:2.9.0"
+        implementation 'org.apache.commons:commons-lang3:3.12.0'
 
-    // spring doc
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
-    // jwt
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-            // Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
-            'org.bouncycastle:bcprov-jdk15on:1.70'
-            'io.jsonwebtoken:jjwt-gson:0.11.5'
+        // spring doc
+        implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
+        // jwt
+        implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+        // Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
+        'org.bouncycastle:bcprov-jdk15on:1.70'
+        'io.jsonwebtoken:jjwt-gson:0.11.5'
 
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-aop'
+        compileOnly 'org.projectlombok:lombok'
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+        annotationProcessor 'org.projectlombok:lombok'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.springframework.security:spring-security-test'
+    }
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
 }

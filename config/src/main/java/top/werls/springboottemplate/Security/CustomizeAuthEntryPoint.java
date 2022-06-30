@@ -1,4 +1,4 @@
-package top.werls.springboottemplate.system.Security;
+package top.werls.springboottemplate.Security;
 
 
 import com.google.gson.Gson;

@@ -10,10 +10,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import top.werls.springboottemplate.system.Security.CustomizeAccessDeniedHandler;
-import top.werls.springboottemplate.system.Security.CustomizeAuthEntryPoint;
-import top.werls.springboottemplate.system.Security.JwtAuthenticationTokenFilter;
+import top.werls.springboottemplate.Security.CustomizeAccessDeniedHandler;
+import top.werls.springboottemplate.Security.CustomizeAuthEntryPoint;
+import top.werls.springboottemplate.Security.JwtAuthenticationTokenFilter;
 import top.werls.springboottemplate.system.service.impl.UserDetailsServiceImpl;
+
 
 import javax.annotation.Resource;
 
