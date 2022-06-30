@@ -1,0 +1,9 @@
+
+dependencies {
+    implementation project(':common')
+    implementation project(':config')
+}
+
+test {
+    useJUnitPlatform()
+}
