@@ -7,9 +7,12 @@ import org.springdoc.webmvc.ui.SwaggerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.werls.springboottemplate.Mmo;
 import top.werls.springboottemplate.common.ResultData;
 import top.werls.springboottemplate.common.SecurityRequirementConfig;
 import top.werls.springboottemplate.common.utils.MessageUtils;
+
+import javax.annotation.Resource;
 
 /**
  * @author Jiawei Lee
@@ -21,6 +24,10 @@ import top.werls.springboottemplate.common.utils.MessageUtils;
 @Tag(name = "DemoApi", description = "the DemoApi API")
 public class DemoController {
 
+    @Resource
+    public Mmo mmo;
+
+
     @GetMapping("/i")
     public ResultData<String> demo(){
         return ResultData.success("this is  demo mod");
@@ -31,6 +38,7 @@ public class DemoController {
     @Operation(summary = "getDemo", description = "getDemo")
     @GetMapping(value = "/demo")
     public String getHello() {
+        System.out.println(mmo.getName());
         return "Hello World!";
     }
 
@@ -39,4 +47,5 @@ public class DemoController {
     public String getDemo() {
         return "Hello World!" + messageUtils.getMessage("success");
     }
+
 }
