@@ -1,0 +1,79 @@
+package top.werls.springboottemplate.common.file.impl;
+
+import top.werls.springboottemplate.common.file.FileManagers;
+
+import java.io.File;
+
+/**
+ * 本地目录实现
+ *
+ * @author Jiawei Lee
+ * @version TODO
+ * @date created 2022/7/20
+ * @since on
+ */
+public class FileLocal implements FileManagers {
+  private String filePath;
+
+  public FileLocal(String filePath) {
+    this.filePath = filePath;
+  }
+
+  /**
+   * 获取文件
+   *
+   * @param filename 文件名
+   * @return file 对象 {@link File} 没有文件时返回null
+   */
+  @Override
+  public File get(String filename) {
+
+    return null;
+  }
+
+  /**
+   * 从指定目录(桶)获取文件
+   *
+   * @param filename 文件名
+   * @param path 目录 桶
+   * @return file {@link File} 没有文件时返回null
+   */
+  @Override
+  public File get(String filename, String path) {
+    return null;
+  }
+
+  /**
+   * 保存文件
+   *
+   * @param file file {@link File}
+   */
+  @Override
+  public void save(File file) {}
+
+  /**
+   * 保存文件
+   *
+   * @param file file file {@link File}
+   * @param path 指定目录,or 桶
+   */
+  @Override
+  public void save(File file, String path) {}
+
+  /**
+   * 删除文件
+   *
+   * @param filename 文件名
+   */
+  @Override
+  public void delete(String filename) {}
+
+  /**
+   * 删除文件
+   *
+   * @param filename 文件名
+   * @param path 指定目录 or 桶
+   */
+  @Override
+  public void delete(String filename, String path) {}
+}

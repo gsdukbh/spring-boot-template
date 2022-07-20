@@ -1,4 +1,7 @@
 spring:
+  sql:
+    init:
+      mode:
   application:
     name: ${env.appName}
   messages:
