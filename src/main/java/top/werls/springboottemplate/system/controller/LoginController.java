@@ -25,11 +25,9 @@ public class LoginController {
     @Resource
     private SysUserService userService;
 
-    @Resource
-    private ConfigProperties configProperties;
     @PostMapping("/login")
     public ResultData<LoginVo> login(@RequestBody LoginParam param) {
-        log.info(configProperties.toString());
+
         return ResultData.success(userService.login(param));
     }
 }

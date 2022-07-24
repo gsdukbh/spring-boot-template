@@ -19,21 +19,26 @@ import java.security.interfaces.RSAPublicKey;
 @Configuration
 @ConfigurationProperties(prefix = "env")
 public class ConfigProperties {
-  /**
-   * app mingc
-   */
+  /** app mingc */
   private String appName = "template";
+
   private String version = "0.0.1";
   private boolean isEnableSwagger = false;
-  private StorageType storageType = StorageType.LOCAL;
+  private FileProperties fileConfig = new FileProperties();
+  private JwtProperties jwt = new JwtProperties();
+
   @Data
-  public static class jwtProperties{
-    private Integer expire=30;
-    private  String tokenHeader= "Authorization";
-    private  String tokenPrefix= "Bearer";
-    @NotBlank
-    private RSAPrivateKey privateKey;
-    @NotBlank
-    private RSAPublicKey publicKey;
+  public static class FileProperties {
+    private StorageType type = StorageType.LOCAL;
+    private String path = "/upload";
+  }
+
+  @Data
+  public static class JwtProperties {
+    private Integer expire = 30;
+    private String tokenHeader = "Authorization";
+    private String tokenPrefix = "Bearer";
+    @NotBlank private RSAPrivateKey privateKey;
+    @NotBlank private RSAPublicKey publicKey;
   }
 }

@@ -1,9 +1,14 @@
 package top.werls.springboottemplate.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import top.werls.springboottemplate.common.file.FileManagers;
+import top.werls.springboottemplate.common.file.impl.FileLocal;
+
+import javax.annotation.Resource;
 
 /**
  * 配置file 存储管理器
@@ -15,5 +20,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FileConfig {
 
+    @Resource
+    private ConfigProperties configProperties;
+
+    @Bean
+    public FileManagers fileManagers (){
+        switch (configProperties.getFileConfig().getType()){
+            case LOCAL -> {
+                return  new FileLocal(configProperties.getFileConfig().getPath());
+            }
+            case  MINION -> {
+
+            }
+        }
+        return null;
+    }
 
 }
