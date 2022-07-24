@@ -7,7 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import top.werls.springboottemplate.config.ConfigProperties;
 
+import javax.annotation.Resource;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Duration;
@@ -24,35 +26,27 @@ public class JwtTokenUtils {
 
     private static final String CLAIM_KEY_USERNAME = "username";
     private static final String CLAIM_KEY_TIME = "time";
+    @Resource
+    private ConfigProperties configProperties;
 
-    @Value("${env.jwt.privateKey}")
-    private RSAPrivateKey key;
-    @Value("${env.jwt.publicKey}")
-    private RSAPublicKey publicKey;
-
-    @Value("${env.jwt.expire}")
-    private Long expire;
-
-    @Value("${env.jwt.tokenPrefix}")
-    private String tokenPrefix;
 
 
     public String generateToken(Map<String, Object> claims) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setId(UUID.randomUUID().toString())
-                .setExpiration(getExpirationDate())
-                .signWith(key)
-                .compact();
+    return Jwts.builder()
+        .setClaims(claims)
+        .setId(UUID.randomUUID().toString())
+        .setExpiration(getExpirationDate())
+        .signWith(configProperties.getJwt().getPrivateKey())
+        .compact();
     }
 
     public String generateToken(Map<String, Object> claims, Long time) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setId(UUID.randomUUID().toString())
-                .setExpiration(getExpirationDate(time))
-                .signWith(key)
-                .compact();
+    return Jwts.builder()
+        .setClaims(claims)
+        .setId(UUID.randomUUID().toString())
+        .setExpiration(getExpirationDate(time))
+        .signWith(configProperties.getJwt().getPrivateKey())
+        .compact();
     }
 
     public String generateToken(String username) {
@@ -66,7 +60,7 @@ public class JwtTokenUtils {
     }
 
     private Date getExpirationDate() {
-        return new Date(Instant.now().plus(Duration.ofMinutes(expire)).toEpochMilli());
+        return new Date(Instant.now().plus(Duration.ofMinutes(configProperties.getJwt().getExpire())).toEpochMilli());
     }
 
     private Date getExpirationDate(Long time) {
@@ -103,14 +97,14 @@ public class JwtTokenUtils {
     }
 
     private Claims getClaimsFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(configProperties.getJwt().getPublicKey()).build().parseClaimsJws(token).getBody();
     }
 
     public String refreshToken(String oldToken) {
         if (StringUtils.isBlank(oldToken)) {
             return null;
         }
-        String token = oldToken.substring(tokenPrefix.length());
+        String token = oldToken.substring(configProperties.getJwt().getTokenPrefix().length());
         Claims claims = getClaimsFromToken(token);
         if (isTokenExpired(token)) {
             return null;
