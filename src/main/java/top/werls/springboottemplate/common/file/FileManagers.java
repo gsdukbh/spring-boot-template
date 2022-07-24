@@ -1,6 +1,7 @@
 package top.werls.springboottemplate.common.file;
 
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * 文件管理
@@ -15,7 +16,7 @@ public interface FileManagers {
    * 获取文件
    *
    * @param filename 文件名
-   * @return file 对象 {@link  File} 没有文件时返回null
+   * @return file 对象 {@link  File}
    */
 
   File get(String filename);
@@ -25,9 +26,24 @@ public interface FileManagers {
    *
    * @param filename 文件名
    * @param path 目录 桶
-   * @return file {@link File} 没有文件时返回null
+   * @return file {@link File}
    */
   File get(String filename, String path);
+  /**
+   * 从指定目录(桶)获取 输入流 方便minio
+   *
+   * @param filename 文件名
+   * @param path 目录/ 桶
+   * @return InputStream {@link InputStream}
+   */
+  InputStream getInputStream ( String filename, String path);
+  /**
+   * 从指定目录(桶)获取 输入流 方便minio
+   *
+   * @param filename 文件名
+   * @return InputStream {@link InputStream}
+   */
+  InputStream getInputStream ( String filename);
 
   /**
    * 保存文件

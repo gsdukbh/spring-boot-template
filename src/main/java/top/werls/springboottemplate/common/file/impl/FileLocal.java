@@ -3,6 +3,7 @@ package top.werls.springboottemplate.common.file.impl;
 import top.werls.springboottemplate.common.file.FileManagers;
 
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * 本地目录实现
@@ -40,6 +41,29 @@ public class FileLocal implements FileManagers {
    */
   @Override
   public File get(String filename, String path) {
+    return null;
+  }
+
+  /**
+   * 从指定目录(桶)获取 输入流 方便minio
+   *
+   * @param filename 文件名
+   * @param path     目录/ 桶
+   * @return InputStream {@link InputStream}
+   */
+  @Override
+  public InputStream getInputStream(String filename, String path) {
+    return null;
+  }
+
+  /**
+   * 从指定目录(桶)获取 输入流 方便minio
+   *
+   * @param filename 文件名
+   * @return InputStream {@link InputStream}
+   */
+  @Override
+  public InputStream getInputStream(String filename) {
     return null;
   }
 
