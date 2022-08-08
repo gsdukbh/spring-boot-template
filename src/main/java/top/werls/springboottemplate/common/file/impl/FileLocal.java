@@ -4,6 +4,8 @@ import top.werls.springboottemplate.common.file.FileManagers;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 本地目录实现
@@ -28,8 +30,28 @@ public class FileLocal implements FileManagers {
    */
   @Override
   public File get(String filename) {
+    File file= new File(filePath);
+    var a = file.listFiles();
+    if (a!=null) {
+      for (var t:a ){
+      System.out.println(Arrays.toString(t.list()));
+      }
+    }
 
     return null;
+  }
+
+  public  void findPathFile(File filename, List<File> list){
+    if (filename.isDirectory()){
+      var dirFiles = filename.listFiles();
+      if (dirFiles != null ) {
+        for ( var i : dirFiles){
+          findPathFile(i,list);
+        }
+      }
+    }else {
+      list.add(filename);
+    }
   }
 
   /**
