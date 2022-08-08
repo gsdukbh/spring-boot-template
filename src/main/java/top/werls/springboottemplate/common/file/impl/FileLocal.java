@@ -3,7 +3,9 @@ package top.werls.springboottemplate.common.file.impl;
 import top.werls.springboottemplate.common.file.FileManagers;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,26 +32,36 @@ public class FileLocal implements FileManagers {
    */
   @Override
   public File get(String filename) {
-    File file= new File(filePath);
-    var a = file.listFiles();
-    if (a!=null) {
-      for (var t:a ){
-      System.out.println(Arrays.toString(t.list()));
-      }
-    }
-
-    return null;
+    File file = new File(filePath);
+    List<File> list = new ArrayList<>();
+    findPathFile(file, list);
+    var res =
+        list.stream()
+            .filter(file1 -> file1.getName().equalsIgnoreCase(filename))
+            .findFirst()
+            .orElse(null);
+    return res;
   }
 
-  public  void findPathFile(File filename, List<File> list){
-    if (filename.isDirectory()){
+  @Override
+  public File getByPath(String path) throws FileNotFoundException {
+    if (path.startsWith("/") || path.startsWith("\\")) {
+      File file = new File(filePath + path);
+      return file;
+    } else {
+      throw new FileNotFoundException("file must start with / or \\");
+    }
+  }
+
+  private void findPathFile(File filename, List<File> list) {
+    if (filename.isDirectory()) {
       var dirFiles = filename.listFiles();
-      if (dirFiles != null ) {
-        for ( var i : dirFiles){
-          findPathFile(i,list);
+      if (dirFiles != null) {
+        for (var i : dirFiles) {
+          findPathFile(i, list);
         }
       }
-    }else {
+    } else {
       list.add(filename);
     }
   }
@@ -62,15 +74,26 @@ public class FileLocal implements FileManagers {
    * @return file {@link File} 没有文件时返回null
    */
   @Override
-  public File get(String filename, String path) {
-    return null;
+  public File get(String filename, String path) throws FileNotFoundException {
+    if (!path.startsWith("/") || path.endsWith("\\")) {
+      throw new FileNotFoundException("file must start with / or \\");
+    }
+    File file = new File(filePath + path);
+    List<File> list = new ArrayList<>();
+    findPathFile(file, list);
+    var res =
+        list.stream()
+            .filter(file1 -> file1.getName().equalsIgnoreCase(filename))
+            .findFirst()
+            .orElse(null);
+    return res;
   }
 
   /**
    * 从指定目录(桶)获取 输入流 方便minio
    *
    * @param filename 文件名
-   * @param path     目录/ 桶
+   * @param path 目录/ 桶
    * @return InputStream {@link InputStream}
    */
   @Override

@@ -13,7 +13,7 @@ logging:
   charset:
     file: UTF-8
 env:
-  appName: 'spring boot template'
+  appName: 'spring-boot-template'
   version: '0.0.1'
   isEnableSwagger: true
   jwt:
