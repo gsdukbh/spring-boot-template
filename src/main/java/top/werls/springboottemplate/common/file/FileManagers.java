@@ -3,6 +3,7 @@ package top.werls.springboottemplate.common.file;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * 文件管理
@@ -57,14 +58,14 @@ public interface FileManagers {
    * 保存文件
    * @param file file {@link File}
    */
-  void save(File file);
+  void save(InputStream file);
 
   /**
    * 保存文件
    * @param file  file file {@link File}
    * @param path 指定目录,or 桶
    */
-  void save(File file, String path);
+  void save(InputStream file, String path);
 
   /**
    * 删除文件

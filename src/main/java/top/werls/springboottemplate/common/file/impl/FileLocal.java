@@ -5,6 +5,7 @@ import top.werls.springboottemplate.common.file.FileManagers;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -118,7 +119,7 @@ public class FileLocal implements FileManagers {
    * @param file file {@link File}
    */
   @Override
-  public void save(File file) {}
+  public void save(InputStream file) {}
 
   /**
    * 保存文件
@@ -127,7 +128,7 @@ public class FileLocal implements FileManagers {
    * @param path 指定目录,or 桶
    */
   @Override
-  public void save(File file, String path) {}
+  public void save(InputStream file, String path) {}
 
   /**
    * 删除文件

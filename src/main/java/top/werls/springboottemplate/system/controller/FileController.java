@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import top.werls.springboottemplate.common.ResultData;
 import top.werls.springboottemplate.common.file.FileManagers;
 import top.werls.springboottemplate.common.utils.MessageUtils;
@@ -48,6 +50,13 @@ public class FileController {
     outputStream.close();
     fileInputStream.close();
     response.flushBuffer();
+    return ResultData.success();
+  }
+  @RequestMapping("/upload}")
+  public  ResultData<String> fileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+   if (!file.isEmpty()){
+     fileManagers.save(file.getInputStream());
+   }
     return ResultData.success();
   }
 }
