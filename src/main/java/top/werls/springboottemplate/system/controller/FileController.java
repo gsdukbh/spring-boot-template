@@ -1,5 +1,7 @@
 package top.werls.springboottemplate.system.controller;
 
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,8 +13,6 @@ import top.werls.springboottemplate.common.ResultData;
 import top.werls.springboottemplate.common.file.FileManagers;
 import top.werls.springboottemplate.common.utils.MessageUtils;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 /**
@@ -25,7 +25,8 @@ import java.io.*;
 @RequestMapping("/file")
 public class FileController {
 
-  @Resource private FileManagers fileManagers;
+  @Resource
+  private FileManagers fileManagers;
   @Resource private MessageUtils messageUtils;
 
   @RequestMapping("/download/{filename}")
@@ -52,7 +53,7 @@ public class FileController {
     response.flushBuffer();
     return ResultData.success();
   }
-  @RequestMapping("/upload}")
+  @RequestMapping("/upload")
   public  ResultData<String> fileUpload(@RequestParam("file") MultipartFile file) throws IOException {
    if (!file.isEmpty()){
      fileManagers.save(file.getInputStream());

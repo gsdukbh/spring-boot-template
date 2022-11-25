@@ -1,11 +1,10 @@
 package top.werls.springboottemplate.config;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import top.werls.springboottemplate.common.utils.cache.Cache;
 
-import javax.validation.constraints.NotBlank;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
@@ -38,7 +37,8 @@ public class ConfigProperties {
     private Integer expire = 30;
     private String tokenHeader = "Authorization";
     private String tokenPrefix = "Bearer";
-    @NotBlank private RSAPrivateKey privateKey;
+    @NotBlank
+    private RSAPrivateKey privateKey;
     @NotBlank private RSAPublicKey publicKey;
   }
 }
