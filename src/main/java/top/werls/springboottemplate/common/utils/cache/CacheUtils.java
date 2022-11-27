@@ -24,7 +24,7 @@ public class CacheUtils {
     /**
      * SimpleCache 默认100大小，60s缓存时间
      */
-    public static Cache<Object, Object> simpleCache = new SimpleCache<>(20, 60 * 1000);
+    public static Cache<Object, Object> simpleCache = new SimpleCache<>(100, 60 * 1000);
 
     public static <K, V> SimpleCache<K, V> simple(int capacity, long timeout) {
         return new SimpleCache<>(capacity, timeout);
