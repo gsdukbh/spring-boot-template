@@ -31,17 +31,14 @@ public class DynamicCompileUtils {
   private String clazzPath = new File("").getAbsolutePath() + "\\clazz\\";
 
   private String libsPath;
-  private  String mPackagePath = "top.werls.springboottemplate.compiled";
+
 
   public DynamicCompileUtils setClazzPath(String clazzPath) {
     this.clazzPath = clazzPath;
     return this;
   }
 
-  public  DynamicCompileUtils setPackagePath(String mPackagePath) {
-    this.mPackagePath = mPackagePath;
-    return this;
-  }
+
 
 
   public DynamicCompileUtils setLibsPath(String libsPath) {
@@ -87,7 +84,7 @@ public class DynamicCompileUtils {
     JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
     DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
     ClassLoader classLoader = new CustomClassLoader(
-        Thread.currentThread().getContextClassLoader()).setClazzPath(clazzPath).setPackagePath(mPackagePath);
+        Thread.currentThread().getContextClassLoader()).setClazzPath(clazzPath).setPackagePath(classname.substring(0, lasted));
 
     StandardJavaFileManager standardJavaFileManager =
         compiler.getStandardFileManager(diagnostics, null, null);
