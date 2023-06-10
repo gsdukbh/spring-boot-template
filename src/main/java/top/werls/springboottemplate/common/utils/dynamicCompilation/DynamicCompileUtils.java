@@ -19,6 +19,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
+ *
+ * 类加载器无法加载 lib中jar包，所以需要自定义类加载器，这里没有实现加载lib中jar包
  * @author Li JiaWei
  * @version TODO
  * @date 2023/3/31
@@ -29,20 +31,14 @@ import org.springframework.stereotype.Component;
 public class DynamicCompileUtils {
 
   private String clazzPath = new File("").getAbsolutePath() + "\\clazz\\";
+  @Value("${libs}")
+  private String mPath;
 
-  private String libsPath;
+  public DynamicCompileUtils(){}
 
 
   public DynamicCompileUtils setClazzPath(String clazzPath) {
     this.clazzPath = clazzPath;
-    return this;
-  }
-
-
-
-
-  public DynamicCompileUtils setLibsPath(String libsPath) {
-    this.libsPath = libsPath;
     return this;
   }
 
@@ -64,6 +60,10 @@ public class DynamicCompileUtils {
    */
   public Object compile(String code, String classname) throws Exception {
 
+    if ( codeSecurityCheck(code)) {
+      return  null;
+    }
+
     String SourcePath = clazzPath + classname.replace(".", "\\") + Kind.SOURCE.extension;
     String ClassPath = clazzPath + classname.replace(".", "\\") + Kind.CLASS.extension;
     File fileSource = new File(SourcePath);
@@ -84,7 +84,8 @@ public class DynamicCompileUtils {
     JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
     DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
     ClassLoader classLoader = new CustomClassLoader(
-        Thread.currentThread().getContextClassLoader()).setClazzPath(clazzPath).setPackagePath(classname.substring(0, lasted));
+        Thread.currentThread().getContextClassLoader()).setClazzPath(clazzPath)
+        .setPackagePath(classname.substring(0, lasted));
 
     StandardJavaFileManager standardJavaFileManager =
         compiler.getStandardFileManager(diagnostics, null, null);
@@ -104,29 +105,67 @@ public class DynamicCompileUtils {
             + File.pathSeparator + loadLibs()
     );
     JavaCompiler.CompilationTask task =
-        compiler.getTask(null, standardJavaFileManager, null, options, null,
+        compiler.getTask(null, standardJavaFileManager, diagnostics, options, null,
             javaFiles);
     // 编译
 
     boolean success = task.call();
+
     if (success) {
       Class<?> clazz = classLoader.loadClass(classname);
-      return clazz.newInstance();
+      return clazz.getDeclaredConstructor().newInstance();
+    } else {
+      log.error("  cjuowuo  {} ", diagnostics.getDiagnostics());
     }
     fileClass.delete();
     fileSource.delete();
     return null;
   }
 
+  private boolean codeSecurityCheck(String code) {
+    // 检查代码是否有安全隐患
+    // 禁止使用网络类的方法
+// 禁止使用反射
+    boolean res = code.contains("java.lang.reflect");
+// 禁止使用文件操作
+    res = res || code.contains("java.io");
+// 禁止使用线程操作
+    res = res || code.contains("java.lang.Thread");
+// 禁止使用系统类
+    res = res || code.contains("java.lang.System");
+    res = res || code.contains("System.");
+// 禁止使用java.lang.ClassLoader类
+    res = res || code.contains("java.lang.ClassLoader");
+// 禁止使用java.lang.Runtime类
+    res = res || code.contains("java.lang.Runtime");
+// 禁止使用java.lang.Process类
+    res = res || code.contains("java.lang.Process");
+// 禁止使用java.lang.Compiler类
+    res = res || code.contains("java.lang.Compiler");
+// 禁止使用java.lang.Class类
+    res = res || code.contains("java.lang.Class");
+// 禁止使用java.net 包类
+    res = res || code.contains("java.net");
+    // 禁止 jdi
+    res = res || code.contains("com.sun.jdi");
+    // 禁止 jdk.httpserver
+    res = res || code.contains("com.sun.net");
+    // 禁止 java.compiler
+    res = res || code.contains("javax.tools");
+    // 禁止内存操作
+    res = res || code.contains("sun.misc.Unsafe");
+    // 禁止使用 java.lang.invoke
+    res = res || code.contains("java.lang.invoke");
+    return res;
+  }
+
   private String loadLibs() throws Exception {
     StringBuilder sb = new StringBuilder();
-    if (libsPath != null && !libsPath.isEmpty()) {
-      File lib = new File(libsPath);
-      if (lib.exists() && lib.isDirectory()) {
-        for (File f : lib.listFiles()) {
-          if (f.getPath().endsWith(".jar")) {
-            sb.append(f.getPath()).append(File.pathSeparator);
-          }
+    File lib = new File(mPath);
+    if (lib.exists() && lib.isDirectory()) {
+      for (File f : lib.listFiles()) {
+        if (f.getPath().endsWith(".jar")) {
+          sb.append(f.getPath()).append(File.pathSeparator);
         }
       }
     }

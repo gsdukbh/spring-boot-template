@@ -39,16 +39,14 @@ public class CustomClassLoader extends ClassLoader{
     try {
       data = Files.readAllBytes(Paths.get(path));
     } catch (IOException e) {
-      log.error("CustomClassLoader findClass error", e);
+      throw new ClassNotFoundException("CustomClassLoader findClass error", e);
     }
-    log.info(" findClass name : {}",name) ;
     // 返回解密后的class对象
     return defineClass(name, data, 0, data.length);
   }
   //重写 loadClass () 方法，这个方法负责加载类
   @Override
   public Class<?> loadClass(String name) throws ClassNotFoundException {
-    log.info(" loadClass name : {}",name) ;
     //如果类已经被加载过，就直接返回
     if (findLoadedClass (name) != null ) {
       return findLoadedClass (name);

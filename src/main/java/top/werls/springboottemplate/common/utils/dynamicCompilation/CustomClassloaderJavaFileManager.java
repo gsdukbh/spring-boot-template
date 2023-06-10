@@ -47,13 +47,14 @@ public class CustomClassloaderJavaFileManager implements JavaFileManager {
 
   @Override
   public boolean isSameFile(FileObject a, FileObject b) {
-    throw new UnsupportedOperationException();
+    return standardFileManager.isSameFile(a,b);
   }
 
   @Override
   public boolean handleOption(String current, Iterator<String> remaining) {
 //    throw new UnsupportedOperationException();
-    return false;
+
+    return standardFileManager.handleOption(current,remaining);
   }
 
   @Override
