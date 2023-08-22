@@ -22,7 +22,7 @@ ext {
     // version 配置
     gsonVersion = '2.8.9'
     lang3Version = '3.12.0'
-    springdocVersion = '2.0.4'
+    springdocVersion = '2.2.0'
     jwtVersion = '0.11.5'
 }
 

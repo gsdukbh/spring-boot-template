@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 public class DynamicCompileUtils {
 
   private String clazzPath = new File("").getAbsolutePath() + "\\clazz\\";
-  @Value("${libs}")
+  @Value("${env.libs}")
   private String mPath;
 
   public DynamicCompileUtils(){}
