@@ -12,9 +12,9 @@ import top.werls.springboottemplate.common.file.impl.FileLocal;
 
 
 /**
- * 配置file 存储管理器
+ * 配置file 存储管理器 一个适配器
  * @author Jiawei Lee
- * @version TODO
+ * @version 1
  * @date created 2022/7/20
  * @since on
  */
