@@ -18,15 +18,13 @@ repositories {
     mavenCentral()
 }
 
-ext {
-    // version 配置
-    gsonVersion = '2.8.9'
-    lang3Version = '3.12.0'
-    springdocVersion = '2.5.0'
-    jwtVersion = '0.12.5'
-}
 
 dependencies {
+
+    def jwtVersion = '0.12.5'
+    def gsonVersion = '2.8.9'
+    def lang3Version = '3.12.0'
+    def springdocVersion = '2.5.0'
 
     implementation "com.google.code.gson:gson:${gsonVersion}"
     implementation "org.apache.commons:commons-lang3:${lang3Version}"
