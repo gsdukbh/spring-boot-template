@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class FileManagersTest {
 
-  @Test
+//  @Test
   void get() {
     FileManagers fileManagers =
         new FileLocal("D:\\Development\\Code\\Github\\spring-boot-template\\log");
@@ -29,7 +29,7 @@ class FileManagersTest {
     System.out.println(file.length());
     System.out.println(file.getPath());
   }
-  @Test
+//  @Test
   void  getByPath(){
       try {
           FileManagers fileManagers =

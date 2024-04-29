@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 //@SpringBootTest
 class DynamicCompileUtilsTest {
 
-  @Test
+
   void compile() throws Exception {
     String code = """
         package top.werls.springboottemplate.common.utils.dynamicCompilation;

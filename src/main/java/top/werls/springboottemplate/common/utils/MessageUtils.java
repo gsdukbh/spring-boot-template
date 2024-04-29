@@ -8,14 +8,12 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
-
 import java.util.Locale;
 
 @Component
 @Slf4j
 public class MessageUtils {
-  @Resource
-  private MessageSource messageSource;
+  @Resource private MessageSource messageSource;
 
   public String getMessage(String msgKey) {
     try {
