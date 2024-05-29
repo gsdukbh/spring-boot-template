@@ -6,6 +6,9 @@ spring:
   messages:
     basename: i18n
     encoding: UTF-8
+  threads:
+    virtual:
+      enabled: true
 
 logging:
   config: classpath:logback-spring-dev.xml

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.werls.springboottemplate.common.annotation.RequestLimit;
 import top.werls.springboottemplate.common.utils.MessageUtils;
 import top.werls.springboottemplate.config.SwaggerConfig;
 
@@ -28,6 +29,7 @@ public class DemoApi {
 
   @Operation(summary = "get", description = "success")
   @GetMapping(value = "/success")
+  @RequestLimit(frequency = 2)
   public String getDemo() {
     return "Hello World!" + messageUtils.getMessage("success");
   }

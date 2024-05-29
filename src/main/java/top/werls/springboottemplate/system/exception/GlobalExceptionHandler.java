@@ -11,7 +11,7 @@ import top.werls.springboottemplate.common.ResultData;
 /**
  * 全局异常处理
  * @author leejiawei
- * @version TODO
+ * @version 1
  * @since on  2022/2/8
  */
 @RestControllerAdvice

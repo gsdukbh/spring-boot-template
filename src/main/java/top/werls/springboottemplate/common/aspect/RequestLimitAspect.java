@@ -28,11 +28,14 @@ import java.lang.reflect.Method;
 @Component
 @Slf4j
 public class RequestLimitAspect {
-  @Autowired private HttpServletRequest request;
+
+  @Autowired
+  private HttpServletRequest request;
   private static final Cache<Object, Integer> cache = new SimpleCache<>(200, 60 * 1000);
 
   @Pointcut(value = "@annotation(top.werls.springboottemplate.common.annotation.RequestLimit)")
-  public void point() {}
+  public void point() {
+  }
 
   @Around("point()")
   public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -44,8 +47,7 @@ public class RequestLimitAspect {
     var sessionId = request.getRequestedSessionId();
     if (cache.containsKey(sessionId)) {
       var limit = cache.get(sessionId) + 1;
-      cache.remove(sessionId);
-      cache.put(sessionId, limit, (long) minute * 60 * 1000);
+      cache.replace(sessionId, limit, (long) minute * 60 * 1000);
       if (limit <= frequency) {
         return joinPoint.proceed();
       } else {
