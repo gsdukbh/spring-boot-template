@@ -27,7 +27,8 @@ public class FileController {
 
   @Resource
   private FileManagers fileManagers;
-  @Resource private MessageUtils messageUtils;
+  @Resource
+  private MessageUtils messageUtils;
 
   @RequestMapping("/download/{filename}")
   public ResultData<String> download(HttpServletResponse response, @PathVariable String filename)
@@ -53,11 +54,13 @@ public class FileController {
     response.flushBuffer();
     return ResultData.success();
   }
+
   @RequestMapping("/upload")
-  public  ResultData<String> fileUpload(@RequestParam("file") MultipartFile file) throws IOException {
-   if (!file.isEmpty()){
-     fileManagers.save(file.getInputStream());
-   }
+  public ResultData<String> fileUpload(@RequestParam("file") MultipartFile file)
+      throws IOException {
+    if (!file.isEmpty()) {
+      fileManagers.save(file.getInputStream());
+    }
     return ResultData.success();
   }
 }

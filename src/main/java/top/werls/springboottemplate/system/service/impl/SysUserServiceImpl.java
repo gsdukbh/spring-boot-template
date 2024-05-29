@@ -14,38 +14,38 @@ import top.werls.springboottemplate.system.service.SysUserService;
 import top.werls.springboottemplate.system.vo.LoginVo;
 
 
-
 @Service
 @Slf4j
 public class SysUserServiceImpl implements SysUserService {
 
-    @Resource
-    private UserDetailsServiceImpl userDetailsService;
+  @Resource
+  private UserDetailsServiceImpl userDetailsService;
 
-    @Resource
-    private PasswordEncoder passwordEncoder;
-    @Resource
-    private JwtTokenUtils tokenUtils;
+  @Resource
+  private PasswordEncoder passwordEncoder;
+  @Resource
+  private JwtTokenUtils tokenUtils;
 
-    /**
-     * 登录
-     *
-     * @param param
-     * @return
-     */
-    @Override
-    public LoginVo login(LoginParam param) {
+  /**
+   * 登录
+   *
+   * @param param
+   * @return
+   */
+  @Override
+  public LoginVo login(LoginParam param) {
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(param.getUsername());
+    UserDetails userDetails = userDetailsService.loadUserByUsername(param.getUsername());
 
-        if (!passwordEncoder.matches(param.getPassword(), userDetails.getPassword())) {
-            throw new BadCredentialsException("密码错误");
-        }
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        LoginVo loginVo = new LoginVo();
-        loginVo.setToken(tokenUtils.generateToken(userDetails.getUsername()));
-        return loginVo;
+    if (!passwordEncoder.matches(param.getPassword(), userDetails.getPassword())) {
+      throw new BadCredentialsException("密码错误");
     }
+    UsernamePasswordAuthenticationToken authenticationToken =
+        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+    LoginVo loginVo = new LoginVo();
+    loginVo.setToken(tokenUtils.generateToken(userDetails.getUsername()));
+    return loginVo;
+  }
 
 }
