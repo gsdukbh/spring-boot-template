@@ -11,7 +11,9 @@ import javax.tools.SimpleJavaFileObject;
  * @since on
  */
 public class InMemoryJavaFileObject extends SimpleJavaFileObject {
+
   private String contents = null;
+
   /**
    * Construct a SimpleJavaFileObject of the given kind and with the given URI.
    *
@@ -21,15 +23,15 @@ public class InMemoryJavaFileObject extends SimpleJavaFileObject {
   protected InMemoryJavaFileObject(URI uri, Kind kind) {
     super(uri, kind);
   }
-  public InMemoryJavaFileObject(String className, String contents) throws Exception
-  {
+
+  public InMemoryJavaFileObject(String className, String contents) throws Exception {
     super(URI.create("string:///" + className.replace('.', '/')
         + Kind.SOURCE.extension), Kind.SOURCE);
     this.contents = contents;
   }
+
   public CharSequence getCharContent(boolean ignoreEncodingErrors)
-      throws IOException
-  {
+      throws IOException {
     return contents;
   }
 }

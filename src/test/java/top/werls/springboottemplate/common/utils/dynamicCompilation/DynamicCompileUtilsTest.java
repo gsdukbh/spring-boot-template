@@ -11,24 +11,24 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @date 2023/4/9
  * @since on
  */
-//@SpringBootTest
+@SpringBootTest
 class DynamicCompileUtilsTest {
 
 
+  @Test
   void compile() throws Exception {
     String code = """
-        package top.werls.springboottemplate.common.utils.dynamicCompilation;
+        package dynamicCompilation;
             public class HelloWorld {
                  public String  hello(String msg){
-                   System.out.println("Hello World!"+msg);
-                   return "Hello World!"+msg;
+                   return "Hello World! "+msg;
                   }
             }
         """;
-
     DynamicCompileUtils dynamicCompileUtils = new DynamicCompileUtils();
-    var o = dynamicCompileUtils.compile(code,"top.werls.springboottemplate.common.utils.dynamicCompilation.HelloWorld");
-    var res =o.getClass().getMethod("hello", String.class).invoke(o, "JiaWei");
+    var o = dynamicCompileUtils.compile(code,
+        "dynamicCompilation.HelloWorld");
+    var res = o.getClass().getMethod("hello", String.class).invoke(o, "compile");
     System.out.println(res);
   }
 }

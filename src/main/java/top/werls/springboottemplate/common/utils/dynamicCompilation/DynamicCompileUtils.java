@@ -19,8 +19,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
- *
  * 类加载器无法加载 lib中jar包，所以需要自定义类加载器，这里没有实现加载lib中jar包
+ *
  * @author Li JiaWei
  * @version TODO
  * @date 2023/3/31
@@ -30,11 +30,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DynamicCompileUtils {
 
-  private String clazzPath = new File("").getAbsolutePath() + "\\clazz\\";
+  private String clazzPath = new File("").getAbsolutePath() + "/clazz/";
   @Value("${env.libs}")
-  private String mPath;
+  private String mPath = "";
 
-  public DynamicCompileUtils(){}
+  public DynamicCompileUtils() {
+  }
 
 
   public DynamicCompileUtils setClazzPath(String clazzPath) {
@@ -60,17 +61,17 @@ public class DynamicCompileUtils {
    */
   public Object compile(String code, String classname) throws Exception {
 
-    if ( codeSecurityCheck(code)) {
-      return  null;
+    if (codeSecurityCheck(code)) {
+      return null;
     }
 
-    String SourcePath = clazzPath + classname.replace(".", "\\") + Kind.SOURCE.extension;
-    String ClassPath = clazzPath + classname.replace(".", "\\") + Kind.CLASS.extension;
+    String SourcePath = clazzPath + classname.replace(".", "/") + Kind.SOURCE.extension;
+    String ClassPath = clazzPath + classname.replace(".", "/") + Kind.CLASS.extension;
     File fileSource = new File(SourcePath);
     File fileClass = new File(ClassPath);
     int lasted = classname.lastIndexOf(".");
     if (lasted > 0) {
-      File fileDir = new File(clazzPath + classname.substring(0, lasted).replace(".", "\\"));
+      File fileDir = new File(clazzPath + classname.substring(0, lasted).replace(".", "/"));
       if (!fileDir.exists()) {
         fileDir.mkdirs();
       }
@@ -113,6 +114,8 @@ public class DynamicCompileUtils {
 
     if (success) {
       Class<?> clazz = classLoader.loadClass(classname);
+      fileClass.delete();
+      fileSource.delete();
       return clazz.getDeclaredConstructor().newInstance();
     } else {
       log.error("  cjuowuo  {} ", diagnostics.getDiagnostics());
