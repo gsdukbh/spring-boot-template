@@ -18,10 +18,12 @@ public class ResultData<T> implements Serializable {
 
     @Schema(description = "返回码")
     private int code;
-    @Schema(description = "返回信息")
+    @Schema(description = "信息")
     private String message;
-    @Schema(description = "返回数据")
+    @Schema(description = "数据")
     private T data;
+    @Schema(description = "数据类型")
+    private String  type;
 
     @Schema(description = "时间戳")
     private Long timeStamp;
@@ -33,6 +35,13 @@ public class ResultData<T> implements Serializable {
         this.code = code;
         this.message = message;
         this.data = data;
+        this.timeStamp = System.currentTimeMillis();
+    }
+    public ResultData(int code, String message,String type, T data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+        this.type =type;
         this.timeStamp = System.currentTimeMillis();
     }
 
