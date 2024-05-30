@@ -36,7 +36,7 @@ public class ConfigProperties {
   public static class JwtProperties {
     private Integer expire = 30;
     private String tokenHeader = "Authorization";
-    private String tokenPrefix = "Bearer";
+    private String tokenPrefix = "Bearer ";
     @NotBlank
     private RSAPrivateKey privateKey;
     @NotBlank private RSAPublicKey publicKey;

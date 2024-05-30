@@ -21,44 +21,74 @@ public class JwtTokenUtils {
 
   private static final String CLAIM_KEY_USERNAME = "username";
   private static final String CLAIM_KEY_TIME = "time";
-  @Resource private ConfigProperties configProperties;
+  @Resource
+  private ConfigProperties configProperties;
 
   public String generateToken(Map<String, Object> claims) {
     return Jwts.builder()
-        .claims(claims).id(UUID.randomUUID().toString())
+        .claims(claims)
+        .id(UUID.randomUUID().toString())
+        .issuedAt(new Date())
         .expiration(getExpirationDate())
         .signWith(configProperties.getJwt().getPrivateKey())
         .compact();
   }
 
-  public String generateToken(Map<String, Object> claims, Long time) {
-    return Jwts.builder().claims(claims).id(UUID.randomUUID().toString())
-        .expiration(getExpirationDate(time))
+  public String generateToken(Map<String, Object> claims, Date time) {
+    return Jwts.builder()
+        .claims(claims)
+        .id(UUID.randomUUID().toString())
+        .issuedAt(new Date())
+        .expiration(time)
         .signWith(configProperties.getJwt().getPrivateKey())
         .compact();
   }
 
+  public String generateTokenWithoutExpiry(Map<String, Object> claims) {
+    return Jwts.builder()
+        .claims(claims)
+        .issuedAt(new Date())
+        .id(UUID.randomUUID().toString())
+        .signWith(configProperties.getJwt().getPrivateKey())
+        .compact();
+  }
   public String generateToken(String username) {
     Map<String, Object> claims =
         Map.of(CLAIM_KEY_USERNAME, username, CLAIM_KEY_TIME, new Date(System.currentTimeMillis()));
     return generateToken(claims);
   }
 
-  public String generateToken(String username, Long time) {
+
+  /**
+   * Generates a JWT token for a given username with a specified expiration time.
+   *
+   * @param username The username for which the token is to be generated.
+   * @param time     The expiration time for the token in milliseconds.
+   * @return The generated JWT token as a String.
+   */
+  public String generateToken(String username, Date time) {
     Map<String, Object> claims =
         Map.of(CLAIM_KEY_USERNAME, username, CLAIM_KEY_TIME, new Date(System.currentTimeMillis()));
     return generateToken(claims, time);
   }
+
+  public String generateTokenWithoutExpiry(String username) {
+    Map<String, Object> claims =
+        Map.of(CLAIM_KEY_USERNAME, username, CLAIM_KEY_TIME, new Date(System.currentTimeMillis()));
+    return generateTokenWithoutExpiry(claims);
+  }
+
+  public boolean validateTokenWithoutExpiry(String token, String username) {
+    String usernameFromToken = getUsernameFromToken(token);
+    return usernameFromToken.equals(username);
+  }
+
 
   private Date getExpirationDate() {
     return new Date(
         Instant.now()
             .plus(Duration.ofMinutes(configProperties.getJwt().getExpire()))
             .toEpochMilli());
-  }
-
-  private Date getExpirationDate(Long time) {
-    return new Date(Instant.now().plus(Duration.ofMillis(time)).toEpochMilli());
   }
 
   public String getUsernameFromToken(String token) {
@@ -77,19 +107,14 @@ public class JwtTokenUtils {
 
   public boolean validateToken(String token, String username) {
     String usernameFromToken = getUsernameFromToken(token);
-    return usernameFromToken.equals(username) && !isTokenExpired(token);
-  }
-
-  private boolean isTokenExpired(String token) {
-    Date expiration = getExpirationDateFromToken(token);
-    return expiration.before(new Date());
+    return usernameFromToken.equals(username) ;
   }
 
   public Date getExpirationDateFromToken(String token) {
     return getClaimsFromToken(token).getExpiration();
   }
 
-  private Claims getClaimsFromToken(String token) {
+  public Claims getClaimsFromToken(String token) {
     return Jwts.parser()
         .verifyWith(configProperties.getJwt().getPublicKey())
         .build()
@@ -103,9 +128,6 @@ public class JwtTokenUtils {
     }
     String token = oldToken.substring(configProperties.getJwt().getTokenPrefix().length());
     Claims claims = getClaimsFromToken(token);
-    if (isTokenExpired(token)) {
-      return null;
-    }
     Date createdDate = claims.get(CLAIM_KEY_TIME, Date.class);
     Date refreshDate = new Date(Instant.now().minus(Duration.ofMinutes(30)).toEpochMilli());
     if (createdDate.after(refreshDate) && createdDate.before(new Date())) {

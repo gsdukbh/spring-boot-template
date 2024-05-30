@@ -31,7 +31,7 @@ public class RequestLimitAspect {
 
   @Autowired
   private HttpServletRequest request;
-  private static final Cache<Object, Integer> cache = new SimpleCache<>(200, 60 * 1000);
+  private static final Cache<Object, Integer> cache = new SimpleCache<>(1000, 60 * 1000);
 
   @Pointcut(value = "@annotation(top.werls.springboottemplate.common.annotation.RequestLimit)")
   public void point() {

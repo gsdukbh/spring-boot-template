@@ -67,6 +67,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
           log.info("Authenticated user: {}", username);
         }
       }
+      // todo API 存储在数据库的token ，可以在这里进行校验
+
     }
     filterChain.doFilter(request, response);
   }
