@@ -19,6 +19,8 @@ logging:
     file: UTF-8
 springdoc:
   show-actuator: true
+  swagger-ui:
+    filter: true
 env:
   appName: 'spring-boot-template'
   version: '0.0.1'

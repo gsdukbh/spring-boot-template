@@ -16,7 +16,7 @@ public class SpringBootTemplateApplication {
     var env = context.getEnvironment();
     var port = env.getProperty("server.port");
     log.warn("""
-                    
+        
         ==============================================
         = App run success !!
         = Swagger doc : http://localhost:{}/swagger-ui.html
