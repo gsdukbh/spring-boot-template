@@ -47,14 +47,14 @@ public class CustomClassloaderJavaFileManager implements JavaFileManager {
 
   @Override
   public boolean isSameFile(FileObject a, FileObject b) {
-    return standardFileManager.isSameFile(a,b);
+    return standardFileManager.isSameFile(a, b);
   }
 
   @Override
   public boolean handleOption(String current, Iterator<String> remaining) {
 //    throw new UnsupportedOperationException();
 
-    return standardFileManager.handleOption(current,remaining);
+    return standardFileManager.handleOption(current, remaining);
   }
 
   @Override
@@ -68,9 +68,10 @@ public class CustomClassloaderJavaFileManager implements JavaFileManager {
   public JavaFileObject getJavaFileForInput(Location location, String className,
       Kind kind) throws IOException {
     // Delegate to the Default Manager
-    return  standardFileManager.getJavaFileForInput(location,className,kind);
+    return standardFileManager.getJavaFileForInput(location, className, kind);
 
   }
+
   @Override
   public Location getLocationForModule(Location location, String moduleName) throws IOException {
     return standardFileManager.getLocationForModule(location, moduleName);
@@ -90,23 +91,24 @@ public class CustomClassloaderJavaFileManager implements JavaFileManager {
   public String inferModuleName(Location location) throws IOException {
     return standardFileManager.inferModuleName(location);
   }
+
   @Override
   public JavaFileObject getJavaFileForOutput(Location location, String className,
       Kind kind, FileObject sibling) throws IOException {
-    return  standardFileManager.getJavaFileForOutput(location,className,kind,sibling);
+    return standardFileManager.getJavaFileForOutput(location, className, kind, sibling);
 
   }
 
   @Override
   public FileObject getFileForInput(Location location, String packageName, String relativeName)
       throws IOException {
-    return  standardFileManager.getFileForInput(location,packageName,relativeName);
+    return standardFileManager.getFileForInput(location, packageName, relativeName);
   }
 
   @Override
   public FileObject getFileForOutput(Location location, String packageName, String relativeName,
       FileObject sibling) throws IOException {
-    return  standardFileManager.getFileForOutput(location,packageName,relativeName,sibling);
+    return standardFileManager.getFileForOutput(location, packageName, relativeName, sibling);
   }
 
   @Override

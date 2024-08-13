@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +28,8 @@ public class FileController {
 
   @Resource
   private FileManagers fileManagers;
-  @Resource private MessageUtils messageUtils;
+  @Resource
+  private MessageUtils messageUtils;
 
   @RequestMapping("/download/{filename}")
   public ResultData<String> download(HttpServletResponse response, @PathVariable String filename)
@@ -53,11 +55,13 @@ public class FileController {
     response.flushBuffer();
     return ResultData.success();
   }
+
   @RequestMapping("/upload")
-  public  ResultData<String> fileUpload(@RequestParam("file") MultipartFile file) throws IOException {
-   if (!file.isEmpty()){
-     fileManagers.save(file.getInputStream());
-   }
+  public ResultData<String> fileUpload(@RequestParam("file") MultipartFile file)
+      throws IOException {
+    if (!file.isEmpty()) {
+      fileManagers.save(file.getInputStream());
+    }
     return ResultData.success();
   }
 }

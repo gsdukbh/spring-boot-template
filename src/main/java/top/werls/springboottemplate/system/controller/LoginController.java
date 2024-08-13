@@ -14,20 +14,24 @@ import top.werls.springboottemplate.system.service.SysUserService;
 import top.werls.springboottemplate.system.vo.LoginVo;
 
 
-
-
 @Slf4j
 @RestController
 public class LoginController {
 
 
-    @Resource
-    private SysUserService userService;
+  @Resource
+  private SysUserService userService;
 
-    @PostMapping("/login")
-    @RequestLimit(frequency = 2)
-    public ResultData<LoginVo> login(@RequestBody LoginParam param, HttpServletRequest servletRequest) {
 
-        return ResultData.success(userService.login(param));
-    }
+  public LoginController(SysUserService userService) {
+    this.userService = userService;
+  }
+
+  @PostMapping("/login")
+  @RequestLimit(frequency = 2)
+  public ResultData<LoginVo> login(@RequestBody LoginParam param,
+      HttpServletRequest servletRequest) {
+
+    return ResultData.success(userService.login(param));
+  }
 }

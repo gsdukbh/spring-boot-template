@@ -30,42 +30,46 @@ import java.io.IOException;
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
 
-    @Resource
-    private JwtTokenUtils tokenUtils;
+  @Resource
+  private JwtTokenUtils tokenUtils;
 
-    @Value("${env.jwt.tokenPrefix}")
-    private String tokenPrefix;
+  @Value("${env.jwt.tokenPrefix}")
+  private String tokenPrefix;
 
-    @Resource
-    private UserDetailsService userDetailsService;
+  @Resource
+  private UserDetailsService userDetailsService;
 
-    /**
-     * Same contract as for {@code doFilter}, but guaranteed to be
-     * just invoked once per request within a single request thread.
-     * See {@link #shouldNotFilterAsyncDispatch()} for details.
-     * <p>Provides HttpServletRequest and HttpServletResponse arguments instead of the
-     * default ServletRequest and ServletResponse ones.
-     *
-     * @param request
-     * @param response
-     * @param filterChain
-     */
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authHeader != null && authHeader.startsWith(tokenPrefix)) {
-            String authToken = authHeader.substring(tokenPrefix.length());
-            String username = tokenUtils.getUsernameFromToken(authToken);
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                if (tokenUtils.validateToken(authToken, userDetails.getUsername())) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    log.info("Authenticated user: {}", username);
-                }
-            }
+  /**
+   * Same contract as for {@code doFilter}, but guaranteed to be just invoked once per request
+   * within a single request thread. See {@link #shouldNotFilterAsyncDispatch()} for details.
+   * <p>Provides HttpServletRequest and HttpServletResponse arguments instead of the
+   * default ServletRequest and ServletResponse ones.
+   *
+   * @param request
+   * @param response
+   * @param filterChain
+   */
+  @Override
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+      FilterChain filterChain) throws ServletException, IOException {
+    String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+    if (authHeader != null && authHeader.startsWith(tokenPrefix)) {
+      String authToken = authHeader.substring(tokenPrefix.length()).trim();
+      String username = tokenUtils.getUsernameFromToken(authToken);
+      if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        if (tokenUtils.validateToken(authToken, userDetails.getUsername())) {
+          UsernamePasswordAuthenticationToken authentication =
+              new UsernamePasswordAuthenticationToken(userDetails, null,
+                  userDetails.getAuthorities());
+          authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          SecurityContextHolder.getContext().setAuthentication(authentication);
+          log.info("Authenticated user: {}", username);
         }
-        filterChain.doFilter(request, response);
+      }
+      // todo API 存储在数据库的token ，可以在这里进行校验
+
     }
+    filterChain.doFilter(request, response);
+  }
 }

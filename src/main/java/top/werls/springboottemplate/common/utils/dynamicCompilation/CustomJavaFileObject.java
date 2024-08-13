@@ -17,6 +17,7 @@ import javax.tools.JavaFileObject;
  * @since on
  */
 public class CustomJavaFileObject implements JavaFileObject {
+
   private final String binaryName;
   private final URI uri;
   private final String name;

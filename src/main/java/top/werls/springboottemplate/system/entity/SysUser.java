@@ -13,15 +13,15 @@ public class SysUser implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long uid;
 
-    @Schema(description = "用户名", example = "admin", required = true)
+    @Schema(description = "用户名", example = "admin")
     private String username;
 
-    @Schema(description = "密码", example = "123456", required = true)
+    @Schema(description = "密码", example = "123456")
     private String password;
     @Schema
     private String salt;
 
-    @Schema(description = "电话", example = "1231", required = true)
+    @Schema(description = "电话", example = "1231")
     private String phone;
     @Schema(description = "邮箱")
     private String email;
