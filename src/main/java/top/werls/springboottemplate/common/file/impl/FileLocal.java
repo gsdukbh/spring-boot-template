@@ -19,7 +19,7 @@ import java.util.List;
  * @since on
  */
 public class FileLocal implements FileManagers {
-  private String filePath;
+  private final String filePath;
 
   public FileLocal(String filePath) {
     this.filePath = filePath;

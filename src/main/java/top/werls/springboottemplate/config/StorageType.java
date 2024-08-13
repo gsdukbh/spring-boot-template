@@ -15,4 +15,5 @@ public enum StorageType {
      * minio 服务器实现
      */
     MINION,
+
 }
