@@ -36,19 +36,16 @@ public class FileLocal implements FileManagers {
     File file = new File(filePath);
     List<File> list = new ArrayList<>();
     findPathFile(file, list);
-    var res =
-        list.stream()
-            .filter(file1 -> file1.getName().equalsIgnoreCase(filename))
-            .findFirst()
-            .orElse(null);
-    return res;
+    return list.stream()
+        .filter(file1 -> file1.getName().equalsIgnoreCase(filename))
+        .findFirst()
+        .orElse(null);
   }
 
   @Override
   public File getByPath(String path) throws FileNotFoundException {
     if (path.startsWith("/") || path.startsWith("\\")) {
-      File file = new File(filePath + path);
-      return file;
+      return new File(filePath + path);
     } else {
       throw new FileNotFoundException("file must start with / or \\");
     }
@@ -82,12 +79,10 @@ public class FileLocal implements FileManagers {
     File file = new File(filePath + path);
     List<File> list = new ArrayList<>();
     findPathFile(file, list);
-    var res =
-        list.stream()
-            .filter(file1 -> file1.getName().equalsIgnoreCase(filename))
-            .findFirst()
-            .orElse(null);
-    return res;
+    return list.stream()
+        .filter(file1 -> file1.getName().equalsIgnoreCase(filename))
+        .findFirst()
+        .orElse(null);
   }
 
   /**
