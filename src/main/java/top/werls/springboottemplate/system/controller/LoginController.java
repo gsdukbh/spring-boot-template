@@ -19,8 +19,9 @@ import top.werls.springboottemplate.system.vo.LoginVo;
 public class LoginController {
 
 
-  @Resource
-  private SysUserService userService;
+  private final SysUserService userService;
+
+
 
 
   public LoginController(SysUserService userService) {

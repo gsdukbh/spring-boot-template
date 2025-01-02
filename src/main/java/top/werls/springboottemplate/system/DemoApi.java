@@ -18,8 +18,11 @@ import top.werls.springboottemplate.config.SwaggerConfig;
 public class DemoApi {
 
 
-  @Autowired
-  private MessageUtils messageUtils;
+  private final MessageUtils messageUtils;
+
+  public DemoApi(MessageUtils messageUtils) {
+    this.messageUtils = messageUtils;
+  }
 
   @Operation(summary = "getDemo", description = "getDemo")
   @GetMapping(value = "/demo")

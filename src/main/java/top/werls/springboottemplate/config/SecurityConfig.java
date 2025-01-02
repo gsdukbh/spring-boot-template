@@ -28,19 +28,28 @@ import top.werls.springboottemplate.system.service.impl.UserDetailsServiceImpl;
 @EnableMethodSecurity()
 public class SecurityConfig {
 
-  @Resource
-  private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
-  @Resource
-  private CustomizeAuthEntryPoint authEntryPoint;
-  @Resource
-  private CustomizeAccessDeniedHandler accessDeniedHandler;
+  private final JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
-  @Resource
+
+  private final CustomizeAuthEntryPoint authEntryPoint;
+
+  private final CustomizeAccessDeniedHandler accessDeniedHandler;
+
+
   public UserDetailsServiceImpl userDetailsService;
 
   @Value("${env.isEnableSwagger}")
   private boolean isEnableSwagger;
+
+  public SecurityConfig(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter,
+      CustomizeAuthEntryPoint authEntryPoint, CustomizeAccessDeniedHandler accessDeniedHandler,
+      UserDetailsServiceImpl userDetailsService) {
+    this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
+    this.authEntryPoint = authEntryPoint;
+    this.accessDeniedHandler = accessDeniedHandler;
+    this.userDetailsService = userDetailsService;
+  }
 
   @Bean
   public PasswordEncoder passwordEncoder() {

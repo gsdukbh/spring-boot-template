@@ -26,10 +26,13 @@ import java.io.*;
 @RequestMapping("/file")
 public class FileController {
 
-  @Resource
-  private FileManagers fileManagers;
-  @Resource
-  private MessageUtils messageUtils;
+  private final FileManagers fileManagers;
+  private final MessageUtils messageUtils;
+
+  public FileController(FileManagers fileManagers, MessageUtils messageUtils) {
+    this.fileManagers = fileManagers;
+    this.messageUtils = messageUtils;
+  }
 
   @RequestMapping("/download/{filename}")
   public ResultData<String> download(HttpServletResponse response, @PathVariable String filename)

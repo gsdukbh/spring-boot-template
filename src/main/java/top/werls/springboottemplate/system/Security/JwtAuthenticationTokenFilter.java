@@ -30,14 +30,17 @@ import java.io.IOException;
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
 
-  @Resource
-  private JwtTokenUtils tokenUtils;
+  private final JwtTokenUtils tokenUtils;
 
   @Value("${env.jwt.tokenPrefix}")
   private String tokenPrefix;
 
-  @Resource
-  private UserDetailsService userDetailsService;
+  private final UserDetailsService userDetailsService;
+
+  public JwtAuthenticationTokenFilter(JwtTokenUtils tokenUtils, UserDetailsService userDetailsService) {
+    this.tokenUtils = tokenUtils;
+    this.userDetailsService = userDetailsService;
+  }
 
   /**
    * Same contract as for {@code doFilter}, but guaranteed to be just invoked once per request

@@ -21,8 +21,11 @@ import top.werls.springboottemplate.common.file.impl.FileLocal;
 @Configuration
 public class FileConfig {
 
-    @Resource
-    private ConfigProperties configProperties;
+    private final ConfigProperties configProperties;
+
+    public FileConfig(ConfigProperties configProperties) {
+        this.configProperties = configProperties;
+    }
 
     @Bean
     public FileManagers fileManagers (){

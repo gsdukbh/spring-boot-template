@@ -29,8 +29,12 @@ import java.lang.reflect.Method;
 @Slf4j
 public class RequestLimitAspect {
 
-  @Autowired
-  private HttpServletRequest request;
+  private final HttpServletRequest request;
+
+  public RequestLimitAspect(HttpServletRequest request) {
+    this.request = request;
+  }
+
   private static final Cache<Object, Integer> cache = new SimpleCache<>(1000, 60 * 1000);
 
   @Pointcut(value = "@annotation(top.werls.springboottemplate.common.annotation.RequestLimit)")

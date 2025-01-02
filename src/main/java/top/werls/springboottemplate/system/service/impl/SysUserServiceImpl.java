@@ -18,13 +18,18 @@ import top.werls.springboottemplate.system.vo.LoginVo;
 @Slf4j
 public class SysUserServiceImpl implements SysUserService {
 
-  @Resource
-  private UserDetailsServiceImpl userDetailsService;
+  private final UserDetailsServiceImpl userDetailsService;
 
-  @Resource
-  private PasswordEncoder passwordEncoder;
-  @Resource
-  private JwtTokenUtils tokenUtils;
+  private final PasswordEncoder passwordEncoder;
+  private final JwtTokenUtils tokenUtils;
+
+
+  public SysUserServiceImpl(UserDetailsServiceImpl userDetailsService,
+      PasswordEncoder passwordEncoder, JwtTokenUtils tokenUtils) {
+    this.userDetailsService = userDetailsService;
+    this.passwordEncoder = passwordEncoder;
+    this.tokenUtils = tokenUtils;
+  }
 
   /**
    * 登录
