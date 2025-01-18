@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
  * @date 2023/3/31
  * @since on
  */
-@Component
+//@Component
 @Slf4j
 public class DynamicCompileUtils {
 
