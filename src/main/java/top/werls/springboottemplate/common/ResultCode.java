@@ -1,10 +1,13 @@
 package top.werls.springboottemplate.common;
 
+import lombok.Getter;
+
 /**
  * @author Jiawei Lee
  * @version TODO
  * @since on  2022/6/18
  */
+@Getter
 public enum ResultCode {
     /**
      * 成功
@@ -47,14 +50,6 @@ public enum ResultCode {
 
     ResultCode(int code) {
         this.code = code;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
     }
 
 }

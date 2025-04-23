@@ -20,7 +20,7 @@ import javax.tools.JavaFileObject;
  */
 public class PackageInternalsFinder {
 
-  private ClassLoader classLoader;
+  private final ClassLoader classLoader;
   private static final String CLASS_FILE_EXTENSION = ".class";
 
   public PackageInternalsFinder(ClassLoader classLoader) {

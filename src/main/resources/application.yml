@@ -9,7 +9,9 @@ spring:
   threads:
     virtual:
       enabled: true
-
+  docker:
+    compose:
+      enabled: false
 logging:
   config: classpath:logback-spring-dev.xml
   file:
