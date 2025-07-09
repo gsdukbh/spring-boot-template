@@ -3,6 +3,7 @@ package top.werls.springboottemplate.common.aspect;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -48,17 +49,27 @@ public class RequestLimitAspect {
     RequestLimit requestLimit = method.getAnnotation(RequestLimit.class);
     int frequency = requestLimit.frequency();
     int minute = requestLimit.minute();
+    String key = request.getRemoteAddr();
     var sessionId = request.getRequestedSessionId();
-    if (cache.containsKey(sessionId)) {
-      var limit = cache.get(sessionId) + 1;
-      cache.replace(sessionId, limit, (long) minute * 60 * 1000);
+    if (StringUtils.isAllBlank(key)){
+      if (StringUtils.isNotBlank(sessionId)) {
+        key = sessionId;
+      } else {
+        // 默认给一个固定值
+        key= "defaultKey";
+      }
+    }
+    Integer current = cache.get(key);
+    if (current != null) {
+      int limit = current + 1;
+      cache.replace(key, limit, (long) minute * 60 * 1000);
       if (limit <= frequency) {
         return joinPoint.proceed();
       } else {
-        throw new RuntimeException("访问过于频繁，请稍后在尝试");
+        throw new RuntimeException("访问过于频繁，请稍后再尝试");
       }
     } else {
-      cache.put(sessionId, 1, (long) minute * 60 * 1000);
+      cache.put(key, 1, (long) minute * 60 * 1000);
       return joinPoint.proceed();
     }
   }
