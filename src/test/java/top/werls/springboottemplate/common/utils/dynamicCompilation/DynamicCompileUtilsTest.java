@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 /**
  * @author Li JiaWei
  * @version 1
- * @date 2023/4/9
+ * @date  2023/4/9
  * @since on
  */
 @SpringBootTest
@@ -29,6 +29,7 @@ class DynamicCompileUtilsTest {
     var o = dynamicCompileUtils.compile(code,
         "dynamicCompilation.HelloWorld");
     var res = o.getClass().getMethod("hello", String.class).invoke(o, "compile");
+    assert res.toString().equals("Hello World! compile");
     System.out.println(res);
   }
 }

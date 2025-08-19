@@ -73,7 +73,7 @@ dependencies {
 
     def jwtVersion = '0.12.5'
     def gsonVersion = '2.11.0'
-    def lang3Version = '3.12.0'
+    def lang3Version = '3.18.0'
     def springdocVersion = '2.7.0'
 
     implementation "com.google.code.gson:gson:${gsonVersion}"
