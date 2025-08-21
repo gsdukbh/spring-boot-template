@@ -29,6 +29,12 @@ public class JwtTokenUtils {
   @Resource
   private ConfigProperties configProperties;
 
+  /**
+   * 根据claims生成JWT token，使用默认过期时间。
+   *
+   * @param claims 要包含在token中的声明信息
+   * @return 生成的JWT token字符串
+   */
   public String generateToken(Map<String, Object> claims) {
     return Jwts.builder()
         .claims(claims)
@@ -39,6 +45,13 @@ public class JwtTokenUtils {
         .compact();
   }
 
+  /**
+   * 根据claims和指定过期时间生成JWT token。
+   *
+   * @param claims 要包含在token中的声明信息
+   * @param time   token的过期时间
+   * @return 生成的JWT token字符串
+   */
   public String generateToken(Map<String, Object> claims, Date time) {
     return Jwts.builder()
         .claims(claims)
@@ -49,6 +62,12 @@ public class JwtTokenUtils {
         .compact();
   }
 
+  /**
+   * 根据claims生成永不过期的JWT token。
+   *
+   * @param claims 要包含在token中的声明信息
+   * @return 生成的永不过期的JWT token字符串
+   */
   public String generateTokenWithoutExpiry(Map<String, Object> claims) {
     return Jwts.builder()
         .claims(claims)
@@ -57,12 +76,18 @@ public class JwtTokenUtils {
         .signWith(configProperties.getJwt().getPrivateKey())
         .compact();
   }
+
+  /**
+   * 为指定用户名生成JWT token，使用默认过期时间。
+   *
+   * @param username 用户名
+   * @return 生成的JWT token字符串
+   */
   public String generateToken(String username) {
     Map<String, Object> claims =
         Map.of(CLAIM_KEY_USERNAME, username, CLAIM_KEY_TIME, new Date(System.currentTimeMillis()));
     return generateToken(claims);
   }
-
 
   /**
    * Generates a JWT token for a given username with a specified expiration time.
@@ -77,18 +102,35 @@ public class JwtTokenUtils {
     return generateToken(claims, time);
   }
 
+  /**
+   * 为指定用户名生成永不过期的JWT token。
+   *
+   * @param username 用户名
+   * @return 生成的永不过期的JWT token字符串
+   */
   public String generateTokenWithoutExpiry(String username) {
     Map<String, Object> claims =
         Map.of(CLAIM_KEY_USERNAME, username, CLAIM_KEY_TIME, new Date(System.currentTimeMillis()));
     return generateTokenWithoutExpiry(claims);
   }
 
+  /**
+   * 验证永不过期的token是否有效（通过比较用户名）。
+   *
+   * @param token    要验证的JWT token
+   * @param username 预期的用户名
+   * @return 如果token中的用户名与提供的用户名匹配则返回true，否则返回false
+   */
   public boolean validateTokenWithoutExpiry(String token, String username) {
     String usernameFromToken = getUsernameFromToken(token);
     return usernameFromToken.equals(username);
   }
 
-
+  /**
+   * 计算token的默认过期时间。
+   *
+   * @return 基于配置的过期时间的Date对象
+   */
   private Date getExpirationDate() {
     return new Date(
         Instant.now()
@@ -96,6 +138,12 @@ public class JwtTokenUtils {
             .toEpochMilli());
   }
 
+  /**
+   * 从JWT token中提取用户名。
+   *
+   * @param token JWT token字符串
+   * @return token中包含的用户名
+   */
   public String getUsernameFromToken(String token) {
     return getClaimsFromToken(token).get(CLAIM_KEY_USERNAME, String.class);
   }
@@ -110,15 +158,34 @@ public class JwtTokenUtils {
     return getClaimsFromToken(token).get(CLAIM_KEY_TIME, Date.class);
   }
 
+  /**
+   * 验证JWT token是否有效（通过比较用户名）。
+   *
+   * @param token    要验证的JWT token
+   * @param username 预期的用户名
+   * @return 如果token中的用户名与提供的用户名匹配则返回true，否则返回false
+   */
   public boolean validateToken(String token, String username) {
     String usernameFromToken = getUsernameFromToken(token);
     return usernameFromToken.equals(username) ;
   }
 
+  /**
+   * 从JWT token中获取过期时间。
+   *
+   * @param token JWT token字符串
+   * @return token的过期时间
+   */
   public Date getExpirationDateFromToken(String token) {
     return getClaimsFromToken(token).getExpiration();
   }
 
+  /**
+   * 从JWT token中解析并获取所有claims。
+   *
+   * @param token JWT token字符串
+   * @return 包含token所有声明信息的Claims对象
+   */
   public Claims getClaimsFromToken(String token) {
     return Jwts.parser()
         .verifyWith(configProperties.getJwt().getPublicKey())
@@ -127,6 +194,12 @@ public class JwtTokenUtils {
         .getPayload();
   }
 
+  /**
+   * 刷新JWT token。如果旧token在刷新窗口期内，则返回原token；否则生成新token。
+   *
+   * @param oldToken 待刷新的旧token（包含前缀）
+   * @return 刷新后的token字符串，如果输入为空则返回null
+   */
   public String refreshToken(String oldToken) {
     if (StringUtils.isBlank(oldToken)) {
       return null;
@@ -184,10 +257,11 @@ public class JwtTokenUtils {
       throw new RuntimeException("SHA-256 algorithm not found", e);
     }
   }
+
   /**
    * 生成一个类似 GitHub 风格的安全 API Token。
    *
-   * @param prefix Token 的前缀，例如 "ghp", "sk"。
+   * @param prefix Token 的���缀，例如 "ghp", "sk"。
    * @param byteLength 随机部分的字节长度。32 字节是一个很好的安全起点。
    * @return 生成的 API Token，格式为 "prefix_randomString"。
    */
