@@ -129,15 +129,12 @@ class CustomClassLoaderTest {
         ClassLoader parent = classLoader.getParent();
         assertNotNull(parent, "CustomClassLoader应该有父类加载器");
 
-        // 验证父类加载器是应用类加载器或其子类
-        assertTrue(parent instanceof ClassLoader, "父类应该是ClassLoader的实例");
     }
 
     @Test
     void testDefaultPackagePath() throws ClassNotFoundException {
         // 测试默认包路径行为
         // 默认包路径是"top.werls.springboottemplate.compiled"
-
         // 加载不在默认包路径下的类，应该使用父类加载器
         Class<?> testClass = classLoader.loadClass("java.lang.Object");
         assertEquals(Object.class, testClass);

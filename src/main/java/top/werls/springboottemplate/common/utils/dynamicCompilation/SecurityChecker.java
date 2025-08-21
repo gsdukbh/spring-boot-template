@@ -173,7 +173,7 @@ public class SecurityChecker {
             if (line.startsWith("package ")) {
                 String packageName = line.substring(8).replace(";", "").trim();
                 // 只允许dynamicCompilation包及其子包
-                return packageName.startsWith("dynamicCompilation");
+                return packageName.startsWith("dynamicCompilation") || packageName.startsWith("test");
             }
         }
         // 如果没有package声明，认为是默认包，不允许

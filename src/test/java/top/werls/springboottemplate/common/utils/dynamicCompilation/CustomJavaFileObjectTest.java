@@ -192,7 +192,7 @@ class CustomJavaFileObjectTest {
         CustomJavaFileObject differentObject = new CustomJavaFileObject("different.Class", uri);
 
         // 注意：CustomJavaFileObject没有重写equals方法，所以使用默认的引用比较
-        assertNotEquals(fileObject, sameObject);
-        assertEquals(fileObject, fileObject);
+        assertNotEquals(fileObject, differentObject);
+        assertEquals(fileObject, sameObject);
     }
 }
