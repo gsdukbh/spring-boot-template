@@ -1,8 +1,8 @@
 plugins {
-    id 'org.springframework.boot' version '3.5.5'
+    id 'org.springframework.boot' version '4.0.0'
     id 'io.spring.dependency-management' version '1.1.7'
-    id 'org.graalvm.buildtools.native' version '0.10.6'
-    id 'com.google.cloud.tools.jib' version "3.4.5"
+    id 'org.graalvm.buildtools.native' version '0.11.3'
+    id 'com.google.cloud.tools.jib' version '3.5.1'
     id 'java'
 }
 
@@ -71,10 +71,10 @@ jib{
 
 dependencies {
 
-    def jwtVersion = '0.12.5'
-    def gsonVersion = '2.11.0'
-    def lang3Version = '3.18.0'
-    def springdocVersion = '2.7.0'
+    def jwtVersion = '0.13.0'
+    def gsonVersion = '2.13.2'
+    def lang3Version = '3.20.0'
+    def springdocVersion = '2.8.14'
 
     implementation "com.google.code.gson:gson:${gsonVersion}"
     implementation "org.apache.commons:commons-lang3:${lang3Version}"
@@ -90,7 +90,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-aspectj'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     developmentOnly 'org.springframework.boot:spring-boot-docker-compose'

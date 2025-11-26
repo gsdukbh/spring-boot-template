@@ -18,11 +18,11 @@ import java.io.IOException;
  */
 @Component
 public class CustomizeAuthEntryPoint implements AuthenticationEntryPoint {
-  private final  Gson gson;
+  private final  Gson gson=new Gson();
 
-  public CustomizeAuthEntryPoint(Gson gson) {
-    this.gson = gson;
-  }
+//  public CustomizeAuthEntryPoint() {
+//    this.gson = new Gson();
+//  }
 
   /**
    * Commences an authentication scheme.
