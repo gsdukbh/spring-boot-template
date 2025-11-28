@@ -61,7 +61,7 @@ jib{
 
     container {
         creationTime = 'USE_CURRENT_TIMESTAMP'
-        ports = ['8080'] // Expose port 8080
+        ports = ['8080'] //todo Expose port 8080
         volumes = ['/app/log','/app/db.sqlite']
         workingDirectory= '/app'
         environment = [JAVA_TOOL_OPTIONS: '-XX:+UseContainerSupport -XX:MaxRAMPercentage=80.0']
@@ -75,6 +75,11 @@ dependencies {
     def gsonVersion = '2.13.2'
     def lang3Version = '3.20.0'
     def springdocVersion = '2.8.14'
+
+    // Caffeine cache https://github.com/ben-manes/caffeine
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
+    // guava https://github.com/google/guava
+    implementation("com.google.guava:guava:33.5.0-jre")
 
     implementation "com.google.code.gson:gson:${gsonVersion}"
     implementation "org.apache.commons:commons-lang3:${lang3Version}"

@@ -70,7 +70,7 @@ public class SecurityConfig {
   public SecurityFilterChain web(HttpSecurity http) throws Exception {
     if (isEnableSwagger) {
       http.authorizeHttpRequests((requests) ->
-          requests.requestMatchers("/swagger-ui.html", "/webjars/**", "/swagger-ui*/**", "/v3/**")
+          requests.requestMatchers("/swagger-ui.html", "/webjars/**", "/swagger-ui*/**", "/v3/**","/demo/**")
               .permitAll());
     }
     http.cors(withDefaults())
