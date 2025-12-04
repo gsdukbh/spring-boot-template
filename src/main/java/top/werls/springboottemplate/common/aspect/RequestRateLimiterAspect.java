@@ -41,7 +41,7 @@ public class RequestRateLimiterAspect {
         Caffeine.newBuilder().expireAfterAccess(1, TimeUnit.HOURS).maximumSize(10_000).build();
   }
 
-  //  @Around("@annotation(top.werls.springboottemplate.common.annotation.RequestLimit)")
+    @Around("@annotation(top.werls.springboottemplate.common.annotation.RequestLimit)")
   public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
     MethodSignature signature = (MethodSignature) joinPoint.getSignature();
     Method method = signature.getMethod();

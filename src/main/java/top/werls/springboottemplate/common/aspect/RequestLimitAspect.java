@@ -27,8 +27,8 @@ import java.lang.reflect.Method;
  * @date 2022/11/27
  * @since on
  */
-@Aspect
-@Component
+//@Aspect
+//@Component
 @Slf4j
 public class RequestLimitAspect {
 
@@ -40,10 +40,10 @@ public class RequestLimitAspect {
 
   private static final Cache<Object, AtomicInteger> cache = new SimpleCache<>(1000, 60 * 1000);
 
-  //  @Pointcut(value = "@annotation(top.werls.springboottemplate.common.annotation.RequestLimit)")
+    @Pointcut(value = "@annotation(top.werls.springboottemplate.common.annotation.RequestLimit)")
   public void point() {}
 
-  //  @Around("point()")
+    @Around("point()")
   public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
     MethodSignature signature = (MethodSignature) joinPoint.getSignature();
     Method method = signature.getMethod();
