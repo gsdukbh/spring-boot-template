@@ -1,6 +1,7 @@
 package top.werls.springboottemplate.common.utils;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import jakarta.annotation.Resource;
 import java.nio.charset.StandardCharsets;
@@ -10,24 +11,61 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import top.werls.springboottemplate.config.ConfigProperties;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * JWT 相关操作工具类，负责生成、解析、验证与刷新应用中的访问令牌。
+ */
 @Slf4j
 @Component
 public class JwtTokenUtils {
 
   private static final String CLAIM_KEY_USERNAME = "username";
   private static final String CLAIM_KEY_TIME = "time";
-  @Resource
-  private ConfigProperties configProperties;
+  private final ConfigProperties configProperties;
+
+  /**
+   * 通过构造函数注入配置，确保依赖在创建时即被满足。
+   *
+   * @param config JWT 相关配置项
+   */
+  public JwtTokenUtils(ConfigProperties config) {
+    this.configProperties = config;
+  }
+
+  /**
+   * JWT 生成结果的载体，包括最终的 token 串以及其对应的 JTI。
+   */
+  public static class JwtInfo {
+    /**
+     * 生成的 JWT 字符串，已完成签名与过期时间设置。
+     */
+    String  token;
+    /**
+     * JWT 的唯一标识（JTI），可用于幂等校验或黑名单管理。
+     */
+    String Jti;
+  }
+
+  /**
+   * 定义 JTI 校验策略的回调接口，实现方可连接缓存或数据库完成校验。
+   */
+  public interface JwtInfoVerifyJti {
+    /**
+     * 校验传入的 JTI 是否符合要求。
+     *
+     * @param jti JWT 唯一标识
+     * @return 校验通过返回 true，否则返回 false
+     */
+    boolean verifyJti(String jti);
+  }
+
 
   /**
    * 根据claims生成JWT token，使用默认过期时间。
@@ -45,11 +83,12 @@ public class JwtTokenUtils {
         .compact();
   }
 
+
   /**
    * 根据claims和指定过期时间生成JWT token。
    *
    * @param claims 要包含在token中的声明信息
-   * @param time   token的过期时间
+   * @param time token的过期时间
    * @return 生成的JWT token字符串
    */
   public String generateToken(Map<String, Object> claims, Date time) {
@@ -60,6 +99,68 @@ public class JwtTokenUtils {
         .expiration(time)
         .signWith(configProperties.getJwt().getPrivateKey())
         .compact();
+  }
+
+  /**
+   * 基于 claims 生成 JWT 并返回包含 token 与 JTI 的结果对象。
+   *
+   * @param claims 要写入的声明信息
+   * @return 携带 token 与 JTI 的 {@link JwtInfo}
+   */
+  public JwtInfo generateJwtInfo(Map<String, Object> claims) {
+    String  jti = UUID.randomUUID().toString();
+    return  new JwtInfo(){
+      {
+        token = Jwts.builder()
+            .claims(claims)
+            .id(jti)
+            .issuedAt(new Date())
+            .expiration(getExpirationDate())
+            .signWith(configProperties.getJwt().getPrivateKey())
+            .compact();
+        Jti = jti;
+      }
+    };
+  }
+
+
+  /**
+   * 基于 claims 生成 JWT，并允许指定过期时间，返回包含 token 与 JTI 的结果对象。
+   *
+   * @param claims 要写入的声明信息
+   * @param time   token 的过期时间
+   * @return 携带 token 与 JTI 的 {@link JwtInfo}
+   */
+  public JwtInfo generateJwtInfo(Map<String, Object> claims, Date time) {
+    String  jti = UUID.randomUUID().toString();
+    return  new JwtInfo(){
+      {
+        token = Jwts.builder()
+            .claims(claims)
+            .id(jti)
+            .issuedAt(new Date())
+            .expiration(time)
+            .signWith(configProperties.getJwt().getPrivateKey())
+            .compact();
+        Jti = jti;
+      }
+    };
+  }
+
+
+  /**
+   * 获取一个已经填充 claims、签名材料与默认过期时间的 {@link JwtBuilder}，
+   * 方便调用方继续自定义其它属性后自行构建。
+   *
+   * @param claims 需要写入的 claims
+   * @return 预配置好的 {@link JwtBuilder}
+   */
+  public JwtBuilder getJwtBuilder(Map<String, Object> claims) {
+    return Jwts.builder()
+        .claims(claims)
+        .issuedAt(new Date())
+        .expiration(getExpirationDate())
+        .signWith(configProperties.getJwt().getPrivateKey());
   }
 
   /**
@@ -93,7 +194,7 @@ public class JwtTokenUtils {
    * Generates a JWT token for a given username with a specified expiration time.
    *
    * @param username The username for which the token is to be generated.
-   * @param time     The expiration time for the token in milliseconds.
+   * @param time The expiration time for the token in milliseconds.
    * @return The generated JWT token as a String.
    */
   public String generateToken(String username, Date time) {
@@ -117,7 +218,7 @@ public class JwtTokenUtils {
   /**
    * 验证永不过期的token是否有效（通过比较用户名）。
    *
-   * @param token    要验证的JWT token
+   * @param token 要验证的JWT token
    * @param username 预期的用户名
    * @return 如果token中的用户名与提供的用户名匹配则返回true，否则返回false
    */
@@ -161,13 +262,13 @@ public class JwtTokenUtils {
   /**
    * 验证JWT token是否有效（通过比较用户名）。
    *
-   * @param token    要验证的JWT token
+   * @param token 要验证的JWT token
    * @param username 预期的用户名
    * @return 如果token中的用户名与提供的用户名匹配则返回true，否则返回false
    */
   public boolean validateToken(String token, String username) {
     String usernameFromToken = getUsernameFromToken(token);
-    return usernameFromToken.equals(username) ;
+    return usernameFromToken.equals(username);
   }
 
   /**
@@ -186,31 +287,52 @@ public class JwtTokenUtils {
    * @param token JWT token字符串
    * @return 包含token所有声明信息的Claims对象
    */
+  /**
+   * 解析并获取 JWT 中的全部 claims，内置 30 秒钟的时钟偏差容忍度。
+   *
+   * @param token 待解析的 JWT 字符串
+   * @return 解析结果中的 claims
+   */
   public Claims getClaimsFromToken(String token) {
     return Jwts.parser()
         .verifyWith(configProperties.getJwt().getPublicKey())
+        .clockSkewSeconds(30) // 允许 30 秒的时间偏差
         .build()
         .parseSignedClaims(token)
         .getPayload();
   }
 
   /**
-   * 刷新JWT token。如果旧token在刷新窗口期内，则返回原token；否则生成新token。
+   * 使用自定义的 JTI 校验策略验证 token 是否可用。
+   *
+   * @param token      待校验的 JWT
+   * @param verifyJti  JTI 校验策略
+   * @return 当 JTI 校验通过时返回 true
+   */
+  public boolean validateToken(String token, JwtInfoVerifyJti verifyJti) {
+    var claims = getClaimsFromToken(token);
+    String jti = claims.getId();
+    return verifyJti.verifyJti(jti);
+  }
+
+  /**
+   * 刷新JWT token。
    *
    * @param oldToken 待刷新的旧token（包含前缀）
-   * @return 刷新后的token字符串，如果输入为空则返回null
+   * @return 刷新后的token字符串，如果输入为空则返回”“
    */
   public String refreshToken(String oldToken) {
     if (StringUtils.isBlank(oldToken)) {
-      return null;
+      return "";
     }
     String token = oldToken.substring(configProperties.getJwt().getTokenPrefix().length());
-    Claims claims = getClaimsFromToken(token);
+    // 不再校验时间
+    /*        Claims claims = getClaimsFromToken(token);
     Date createdDate = claims.get(CLAIM_KEY_TIME, Date.class);
     Date refreshDate = new Date(Instant.now().minus(Duration.ofMinutes(30)).toEpochMilli());
     if (createdDate.after(refreshDate) && createdDate.before(new Date())) {
       return oldToken;
-    }
+    }*/
     String username = getUsernameFromToken(token);
     return generateToken(username);
   }
@@ -219,7 +341,7 @@ public class JwtTokenUtils {
    * 将字节数组转换为十六进制字符串。
    *
    * @param hash 哈希计算后得到的字节数组
-   * @return     十六进制表示的字符串
+   * @return 十六进制表示的字符串
    */
   private static String bytesToHex(byte[] hash) {
     StringBuilder hexString = new StringBuilder(2 * hash.length);
@@ -237,7 +359,7 @@ public class JwtTokenUtils {
    * 计算给定字符串的 SHA-256 哈希值。
    *
    * @param input 原始字符串 (例如 API Token)
-   * @return      计算出的 SHA-256 哈希值，以十六进制字符串形式表示。
+   * @return 计算出的 SHA-256 哈希值，以十六进制字符串形式表示。
    */
   public static String hashString(String input) {
     try {
@@ -246,8 +368,7 @@ public class JwtTokenUtils {
 
       // 2. 将输入字符串按 UTF-8 编码转换为字节数组，并进行哈希计算
       // digest() 方法返回哈希值的字节数组
-      byte[] encodedhash = digest.digest(
-          input.getBytes(StandardCharsets.UTF_8));
+      byte[] encodedhash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
 
       // 3. 将字节数组转换为十六进制字符串
       return bytesToHex(encodedhash);
@@ -261,7 +382,7 @@ public class JwtTokenUtils {
   /**
    * 生成一个类似 GitHub 风格的安全 API Token。
    *
-   * @param prefix Token 的���缀，例如 "ghp", "sk"。
+   * @param prefix Token 的缀，例如 "ghp", "sk"。
    * @param byteLength 随机部分的字节长度。32 字节是一个很好的安全起点。
    * @return 生成的 API Token，格式为 "prefix_randomString"。
    */
