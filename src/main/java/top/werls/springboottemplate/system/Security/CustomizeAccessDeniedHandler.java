@@ -16,6 +16,10 @@ import java.io.IOException;
 @Component
 public class CustomizeAccessDeniedHandler implements AccessDeniedHandler {
 
+  private final  Gson gson;
+  public CustomizeAccessDeniedHandler() {
+    this.gson = new Gson();
+  }
   /**
    * Handles an access denied failure.
    *
@@ -28,7 +32,6 @@ public class CustomizeAccessDeniedHandler implements AccessDeniedHandler {
   @Override
   public void handle(HttpServletRequest request, HttpServletResponse response,
       AccessDeniedException accessDeniedException) throws IOException, ServletException {
-    Gson gson = new Gson();
     response.setCharacterEncoding("UTF-8");
     response.setContentType("application/json");
     response.getWriter().write(gson.toJson(ResultData.notAuth(accessDeniedException.getMessage())));

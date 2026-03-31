@@ -15,7 +15,7 @@ public class SpringBootTemplateApplication {
     var context = SpringApplication.run(SpringBootTemplateApplication.class, args);
     var env = context.getEnvironment();
     var port = env.getProperty("server.port");
-    log.warn("""
+    log.info("""
         
         ==============================================
         = App run success !!

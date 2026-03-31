@@ -6,21 +6,19 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 请求限制注解, 用于限制接口在一定时间内的访问次数
- * @author Li JiaWei by 2022/11/27
+ *  匀速限流
+ * @author JiaWei Lee
+ * @since on 28 11月 2025
  * @version 1
- * @since on
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RequestLimit {
-
+public @interface RequestRateLimit {
   /**
    * 限制 访问次数，
    *
    */
   int frequency() default 100;
-
   /**
    * 在几分钟内
    *
