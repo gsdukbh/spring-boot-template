@@ -50,9 +50,7 @@ class DynamicCompilationSecurityManagerTest {
     @Test
     void testInitialize() {
         // 测试初始化方法
-        assertDoesNotThrow(() -> {
-            DynamicCompilationSecurityManager.initialize();
-        });
+        assertDoesNotThrow(DynamicCompilationSecurityManager::initialize);
     }
 
     @Test

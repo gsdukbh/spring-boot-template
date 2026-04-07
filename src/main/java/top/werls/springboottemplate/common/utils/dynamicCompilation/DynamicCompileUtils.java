@@ -302,7 +302,7 @@ public class DynamicCompileUtils {
     StringBuilder sb = new StringBuilder();
     File lib = new File(mPath);
 
-    // 检查库目录是否存��
+    // 检查库目录是否存
     if (lib.exists() && lib.isDirectory()) {
       // 遍历目录下的所有文件
       File[] files = lib.listFiles();

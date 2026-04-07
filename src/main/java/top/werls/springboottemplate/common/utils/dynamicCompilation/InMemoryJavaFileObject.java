@@ -8,7 +8,7 @@ import javax.tools.SimpleJavaFileObject;
  * 内存中的Java文件对象
  * 继承自SimpleJavaFileObject，用于在动态编译系统中表示存储在内存中的Java源代码
  *
- * <p>该类主要用于动态编译场景，将Java源代码字符串包装成JavaFileObject���
+ * <p>该类主要用于动态编译场景，将Java源代码字符串包装成JavaFileObject
  * 使得Java编译器能够直接从内存中读取源代码进行编译，而不需要实际的文件系统支持</p>
  *
  * <p>特点：</p>

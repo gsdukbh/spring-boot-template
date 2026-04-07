@@ -44,7 +44,7 @@ public class CustomJavaFileObject implements JavaFileObject {
    * 构造自定义Java文件对象
    * 根据URI类型智能确定文件名称
    *
-   * @param binaryName 类的二进制名称（��：com.example.MyClass）
+   * @param binaryName 类的二进制名称（：com.example.MyClass）
    * @param uri 文件的URI位置
    */
   public CustomJavaFileObject(String binaryName, URI uri) {
@@ -80,7 +80,7 @@ public class CustomJavaFileObject implements JavaFileObject {
   }
 
   /**
-   * 打开输出流写��文件内容
+   * 打开输出流写文件内容
    * 当前实现不支持写入操作
    *
    * @return 不支持，抛出异常
