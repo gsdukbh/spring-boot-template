@@ -63,7 +63,7 @@ public class FileController {
   public ResultData<String> fileUpload(@RequestParam("file") MultipartFile file)
       throws IOException {
     if (!file.isEmpty()) {
-      fileManagers.save(file.getInputStream());
+      fileManagers.save(file.getInputStream(), file.getOriginalFilename());
     }
     return ResultData.success();
   }

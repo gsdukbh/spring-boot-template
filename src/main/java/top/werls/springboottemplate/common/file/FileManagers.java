@@ -57,15 +57,17 @@ public interface FileManagers {
   /**
    * 保存文件
    * @param file file {@link File}
+   * @param filename 文件名
    */
-  void save(InputStream file);
+  void save(InputStream file, String filename);
 
   /**
    * 保存文件
    * @param file  file file {@link File}
    * @param path 指定目录,or 桶
+   * @param filename 文件名
    */
-  void save(InputStream file, String path);
+  void save(InputStream file, String path, String filename);
 
   /**
    * 删除文件

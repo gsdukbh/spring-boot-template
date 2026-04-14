@@ -5,7 +5,13 @@ import top.werls.springboottemplate.common.file.FileManagers;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -73,7 +79,7 @@ public class FileLocal implements FileManagers {
    */
   @Override
   public File get(String filename, String path) throws FileNotFoundException {
-    if (!path.startsWith("/") || path.endsWith("\\")) {
+    if (!path.startsWith("/") && !path.startsWith("\\")) {
       throw new FileNotFoundException("file must start with / or \\");
     }
     File file = new File(filePath + path);
@@ -94,6 +100,14 @@ public class FileLocal implements FileManagers {
    */
   @Override
   public InputStream getInputStream(String filename, String path) {
+    try {
+      File file = get(filename, path);
+      if (file != null && file.exists()) {
+        return new FileInputStream(file);
+      }
+    } catch (FileNotFoundException e) {
+      return null;
+    }
     return null;
   }
 
@@ -105,25 +119,48 @@ public class FileLocal implements FileManagers {
    */
   @Override
   public InputStream getInputStream(String filename) {
+    File file = get(filename);
+    if (file != null && file.exists()) {
+      try {
+        return new FileInputStream(file);
+      } catch (FileNotFoundException e) {
+        return null;
+      }
+    }
     return null;
   }
 
   /**
    * 保存文件
    *
-   * @param file file {@link File}
+   * @param file     InputStream
+   * @param filename 文件名
    */
   @Override
-  public void save(InputStream file) {}
+  public void save(InputStream file, String filename) {
+    save(file, "/", filename);
+  }
 
   /**
    * 保存文件
    *
-   * @param file file file {@link File}
-   * @param path 指定目录,or 桶
+   * @param file     InputStream
+   * @param path     指定目录,or 桶
+   * @param filename 文件名
    */
   @Override
-  public void save(InputStream file, String path) {}
+  public void save(InputStream file, String path, String filename) {
+    try {
+      Path dirPath = Paths.get(filePath, path);
+      if (!Files.exists(dirPath)) {
+        Files.createDirectories(dirPath);
+      }
+      Path targetPath = dirPath.resolve(filename);
+      Files.copy(file, targetPath, StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
+      throw new RuntimeException("Save file error", e);
+    }
+  }
 
   /**
    * 删除文件
@@ -131,14 +168,27 @@ public class FileLocal implements FileManagers {
    * @param filename 文件名
    */
   @Override
-  public void delete(String filename) {}
+  public void delete(String filename) {
+    File file = get(filename);
+    if (file != null && file.exists()) {
+      file.delete();
+    }
+  }
 
   /**
    * 删除文件
    *
    * @param filename 文件名
-   * @param path 指定目录 or 桶
+   * @param path     指定目录 or 桶
    */
   @Override
-  public void delete(String filename, String path) {}
+  public void delete(String filename, String path) {
+    try {
+      File file = get(filename, path);
+      if (file != null && file.exists()) {
+        file.delete();
+      }
+    } catch (FileNotFoundException ignored) {
+    }
+  }
 }
