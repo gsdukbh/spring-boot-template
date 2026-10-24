@@ -74,7 +74,7 @@ dependencies {
     def jwtVersion = '0.13.0'
     def gsonVersion = '2.13.2'
     def lang3Version = '3.20.0'
-    def springdocVersion = '2.8.14'
+    def springdocVersion = '3.1.1'
 
     // Caffeine cache https://github.com/ben-manes/caffeine
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
